@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твой Букмекер</title>
+    <!-- Подключаем SDK Телеграма -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #181818);
+            color: var(--tg-theme-text-color, #ffffff);
+            margin: 0;
+            padding: 15px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .balance {
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        .match-card {
+            background: #242424;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .teams {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .odds-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .odd-btn {
+            flex: 1;
+            background: #333;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .odd-btn:hover {
+            background: var(--tg-theme-button-color, #2481cc);
+        }
+        .odd-btn span {
+            display: block;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h3>Лига Ставок (Виртуальная)</h3>
+        <div class="balance" id="user-balance">1,000 COIN</div>
+    </div>
+
+    <!-- Пример карточки матча -->
+    <div class="match-card">
+        <div class="teams">Реал Мадрид — Барселона</div>
+        <div class="odds-container">
+            <button class="odd-btn" onclick="makeBet('Реал Мадрид', 1.95)">
+                <span>П1</span><strong>1.95</strong>
+            </button>
+            <button class="odd-btn" onclick="makeBet('Ничья', 3.40)">
+                <span>X</span><strong>3.40</strong>
+            </button>
+            <button class="odd-btn" onclick="makeBet('Барселона', 2.15)">
+                <span>П2</span><strong>2.15</strong>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); // Расширяем на весь экран
+
+        function makeBet(outcome, odds) {
+            // Показываем стандартное всплывающее окно Telegram для подтверждения
+            tg.showPopup({
+                title: 'Оформление ставки',
+                message: `Вы хотите поставить на: ${outcome} с коэффициентом ${odds}?`,
+                buttons: [
+                    {id: 'ok', type: 'default', text: 'Поставить 100 COIN'},
+                    {id: 'cancel', type: 'cancel', text: 'Отмена'}
+                ]
+            }, function(buttonId) {
+                if (buttonId === 'ok') {
+                    tg.showAlert(`Ставка принята! Ожидайте завершения матча.`);
+                    // Здесь в будущем будет отправка данных на ваш бэкенд
+                }
+            });
+        }
+    </script>
+</body>
+</html>
